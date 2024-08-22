@@ -1,6 +1,6 @@
 # Fitness Assistant
 
-## Problem Description
+## Problem description
 
 Staying consistent with fitness routines is challenging,
 especially for beginners. Gyms can be intimidating, and
@@ -24,7 +24,7 @@ The dataset used in this project contains information about various exercises, i
 
 The dataset was generated using ChatGPT and contains 207 records. It serves as the foundation for the Fitness Assistant's exercise recommendations and instructional support.
 
-## Project Overview
+## Project overview
 
 The Fitness Assistant is a RAG application for assisting users
 with their fitness routines.
@@ -70,6 +70,9 @@ pipenv run jupyter notebook
 For the code for evaluating the system, you can check 
 the [notebooks/rag-test.ipynb](notebooks/rag-test.ipynb)
 notebook.
+
+We generated the ground truth dataset using this notebook:
+[notebooks/evaluation-data-generation.ipynb](notebooks/evaluation-data-generation.ipynb)
 
 ### Retrieval
 
