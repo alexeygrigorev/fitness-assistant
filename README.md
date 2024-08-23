@@ -37,7 +37,18 @@ The main use cases include:
 4. Conversational Interaction: make it easy to get the information without sifting through manuals or websites
 
 
+## Technologies
+
+* [Minsearch](https://github.com/alexeygrigorev/minsearch) - for full-text search
+* OpenAI as an LLM
+* Flask as the API interface (see [Background](#background) for more information on Flask)
+
+
+
 ## Running it
+
+
+### Installing the dependencies
 
 We use `pipenv` for managing dependencies and Python 3.12.
 
@@ -50,8 +61,76 @@ pip install pipenv
 Installing the dependencies:
 
 ```bash
-pipenv install
+pipenv install --dev
 ```
+
+### Running the application
+
+Running the Flask application:
+
+```bash
+pipenv run python app.py
+```
+
+Testing it:
+
+```bash
+URL=http://localhost:5000
+
+QUESTION="Is the Lat Pulldown considered a strength training activity, and if so, why?"
+
+DATA='{
+    "question": "'${QUESTION}'"
+}'
+
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d "${DATA}" \
+  ${URL}/question
+```
+
+You will see sonething like the following in the response:
+
+```json
+{
+  "answer": "Yes, the Lat Pulldown is considered a strength training activity. This classification is due to it targeting specific muscle groups, specifically the Latissimus Dorsi and Biceps, which are essential for building upper body strength. The exercise utilizes a machine, allowing for controlled resistance during the pulling action, which is a hallmark of strength training.",
+  "conversation_id": "4e1cef04-bfd9-4a2c-9cdd-2771d8f70e4d",
+  "question": "Is the Lat Pulldown considered a strength training activity, and if so, why?"
+}
+```
+
+Sending feedback:
+
+```bash
+ID="4e1cef04-bfd9-4a2c-9cdd-2771d8f70e4d"
+
+FEEDBACK_DATA='{
+    "conversation_id": "'${ID}'",
+    "feedback": 1
+}'
+
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d "${FEEDBACK_DATA}" \
+  ${URL}/feedback
+```
+
+After sending it, you'll receive the acknowledgement:
+
+
+```json
+{
+  "message": "Feedback received for conversation 4e1cef04-bfd9-4a2c-9cdd-2771d8f70e4d: 1"
+}
+```
+
+Alternatively, you can use [test.py](test.py) for testing it:
+
+```bash
+pipenv run python test.py
+```
+
+### Misc
 
 Running Jupyter notebook for experiments:
 
@@ -60,9 +139,17 @@ cd notebooks
 pipenv run jupyter notebook
 ```
 
+## Interface
+
+We use Flask for serving the application as API.
+
+Refer to ["Running the Application" section](#running-the-application) for more detail.
 
 
 ## Ingestion
+
+The ingestion script is in [fitness_assistant/ingest.py](fitness_assistant/ingest.py) and it's run on the startup
+of the app (in [fitness_assistant/rag.py](fitness_assistant/rag.py))
 
 
 ## Evaluation 
@@ -76,12 +163,12 @@ We generated the ground truth dataset using this notebook:
 
 ### Retrieval
 
-The basic approach - using minsearch without any boosting - gave the following metrics:
+The basic approach - using `minsearch` without any boosting - gave the following metrics:
 
 * hit_rate: 94%
 * MRR: 82%
 
-The improved vesion (with better boosting):
+The improved vesion (with tuned boosting):
 
 * hit_rate: 94%
 * MRR: 90%
@@ -121,3 +208,19 @@ The difference is far from significant, so we went with gpt-4o-mini.
 
 ## Monitoring
 
+
+## Background
+
+Here we provide background on some tech not used in the course
+and links for futher reading.
+
+### Flask
+
+We use Flask for creating the API interface for our application.
+It's a web application framework for Python: we can easily create
+and endpoint for asking questions and use web clients (like
+`curl` or `requests`) for communicating with it.
+
+In our case, we can send the question to `http://localhost:5000/question`.
+
+For more information, visit the [official Flask documentation](https://flask.palletsprojects.com/).
