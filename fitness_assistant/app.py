@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify
 
 from rag import rag
 
+import db
 
 app = Flask(__name__)
 
@@ -18,13 +19,19 @@ def handle_question():
 
     conversation_id = str(uuid.uuid4())
 
-    answer = rag(question)
+    answer_data = rag(question)
 
     result = {
         "conversation_id": conversation_id,
         "question": question,
-        "answer": answer,
+        "answer": answer_data["answer"],
     }
+
+    db.save_conversation(
+        conversation_id=conversation_id,
+        question=question,
+        answer_data=answer_data,
+    )
 
     return jsonify(result)
 
@@ -38,8 +45,11 @@ def handle_feedback():
     if not conversation_id or feedback not in [1, -1]:
         return jsonify({"error": "Invalid input"}), 400
 
-    # TODO: Store feedback in database
-    # For now, just acknowledge receipt
+    db.save_feedback(
+        conversation_id=conversation_id,
+        feedback=feedback,
+    )
+
     result = {
         "message": f"Feedback received for conversation {conversation_id}: {feedback}"
     }

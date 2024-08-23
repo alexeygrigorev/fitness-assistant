@@ -10,6 +10,19 @@ The Fitness Assistant provides a conversational AI that helps
 users choose exercises and find alternatives, making fitness
 more manageable.
 
+
+## Project overview
+
+The Fitness Assistant is a RAG application for assisting users
+with their fitness routines.
+
+The main use cases include:
+
+1. Exercise Selection: recommend exercises based type of activity, targeted muscle groups, or available equipment
+2. Exercise Replacement: replace an exercise with a suitable alternatives
+3. Exercise Instructions: perform a specific exercise
+4. Conversational Interaction: make it easy to get the information without sifting through manuals or websites
+
 ## Dataset
 
 The dataset used in this project contains information about various exercises, including:
@@ -24,18 +37,6 @@ The dataset used in this project contains information about various exercises, i
 
 The dataset was generated using ChatGPT and contains 207 records. It serves as the foundation for the Fitness Assistant's exercise recommendations and instructional support.
 
-## Project overview
-
-The Fitness Assistant is a RAG application for assisting users
-with their fitness routines.
-
-The main use cases include:
-
-1. Exercise Selection: recommend exercises based type of activity, targeted muscle groups, or available equipment
-2. Exercise Replacement: replace an exercise with a suitable alternatives
-3. Exercise Instructions: perform a specific exercise
-4. Conversational Interaction: make it easy to get the information without sifting through manuals or websites
-
 
 ## Technologies
 
@@ -44,8 +45,52 @@ The main use cases include:
 * Flask as the API interface (see [Background](#background) for more information on Flask)
 
 
+## Running it with Docker
 
-## Installing the dependencies
+The easiest way to run this application is with docker-compose:
+
+```bash
+docker-compose up
+```
+
+If you need to change something in the dockerfile and test
+it quickly, you can use the following commands:
+
+
+```bash
+docker build -t fitness-assistant .
+
+docker run -it --rm \
+    -e OPENAI_API_KEY=${OPENAI_API_KEY} \
+    -e DATA_PATH="data/data.csv" \
+    -p 5000:5000 \
+    fitness-assistant
+```
+
+
+## Preparing the application
+
+Before we can use the app, we need to initialize the database.
+
+We can do it by running the [`db_prep.py`](fitness_assistant/db_prep.py) script:
+
+```bash
+cd fitness_assistant
+
+pipenv shell
+
+export POSTGRES_HOST=localhost
+python db_prep.py
+```
+
+
+## Running locally
+
+### Installing the dependencies
+
+If you don't use docker and want to run locally,
+you need to manually prepare the environment and install
+all the dependencies. 
 
 We use `pipenv` for managing dependencies and Python 3.12.
 
@@ -61,15 +106,24 @@ Installing the dependencies:
 pipenv install --dev
 ```
 
-## Running the application
+### Running the application
 
-Running the Flask application:
+For running the application locally, do this:
 
 ```bash
-pipenv run python app.py
+pipenv shell
+
+export POSTGRES_HOST=localhost
+python app.py
 ```
 
-Testing it:
+
+## Using the application
+
+First, you need to start the application either with
+docker-compose or locally. 
+
+When it's running, let's test it:
 
 ```bash
 URL=http://localhost:5000
@@ -100,6 +154,8 @@ Sending feedback:
 
 ```bash
 ID="4e1cef04-bfd9-4a2c-9cdd-2771d8f70e4d"
+
+URL=http://localhost:5000
 
 FEEDBACK_DATA='{
     "conversation_id": "'${ID}'",
