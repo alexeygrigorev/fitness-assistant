@@ -45,10 +45,7 @@ The main use cases include:
 
 
 
-## Running it
-
-
-### Installing the dependencies
+## Installing the dependencies
 
 We use `pipenv` for managing dependencies and Python 3.12.
 
@@ -64,7 +61,7 @@ Installing the dependencies:
 pipenv install --dev
 ```
 
-### Running the application
+## Running the application
 
 Running the Flask application:
 
@@ -130,38 +127,55 @@ Alternatively, you can use [test.py](test.py) for testing it:
 pipenv run python test.py
 ```
 
-### Misc
 
-Running Jupyter notebook for experiments:
+## Code
 
-```bash
-cd notebooks
-pipenv run jupyter notebook
-```
+The code for the application is in the
+[`fitness_assistant`](fitness_assistant/) folder:
 
-## Interface
+- [`app.py`](fitness_assistant/app.py)
+- [`ingest.py`](fitness_assistant/ingest.py)
+- [`minsearch.py`](fitness_assistant/minsearch.py)
+- [`rag.py`](fitness_assistant/rag.py)
+
+
+### Interface
 
 We use Flask for serving the application as API.
 
 Refer to ["Running the Application" section](#running-the-application) for more detail.
 
 
-## Ingestion
+### Ingestion
 
-The ingestion script is in [fitness_assistant/ingest.py](fitness_assistant/ingest.py) and it's run on the startup
-of the app (in [fitness_assistant/rag.py](fitness_assistant/rag.py))
+The ingestion script is in [`ingest.py`](fitness_assistant/ingest.py).
+
+Because we use an in-memory database minsearch as our
+knowledge base, we run the ingestion script on the startup
+of the application.
+
+It's run inside [`rag.py`](fitness_assistant/rag.py) when we import it
 
 
-## Evaluation 
 
-For the code for evaluating the system, you can check 
-the [notebooks/rag-test.ipynb](notebooks/rag-test.ipynb)
-notebook.
+## Experiments
 
-We generated the ground truth dataset using this notebook:
-[notebooks/evaluation-data-generation.ipynb](notebooks/evaluation-data-generation.ipynb)
+For experiments, we use Jupyter notebooks. They are in the [`notebooks`](notebooks/) folder
 
-### Retrieval
+To start jupyter, run:
+
+```bash
+cd notebooks
+pipenv run jupyter notebook
+```
+
+We have the following notebooks:
+
+* [`rag-test.ipynb`](notebooks/rag-test.ipynb): the RAG flow and evaluating the system
+* [`evaluation-data-generation.ipynb`](notebooks/evaluation-data-generation.ipynb): generating the ground truth dataset for retrieval evaluation
+
+
+### Retrieval evaluation
 
 The basic approach - using `minsearch` without any boosting - gave the following metrics:
 
@@ -187,7 +201,7 @@ boost = {
 }
 ```
 
-### RAG flow
+### RAG flow evaluation
 
 We used the LLM-as-a-Judge metric to evaluate the quality
 of our RAG flow
@@ -205,6 +219,7 @@ We also tested gpt-4o:
 * 2 (1%) `NON_RELEVANT`
 
 The difference is far from significant, so we went with gpt-4o-mini.
+
 
 ## Monitoring
 
