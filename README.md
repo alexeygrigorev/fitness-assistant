@@ -14,6 +14,10 @@ The Fitness Assistant provides a conversational AI that helps
 users choose exercises and find alternatives, making fitness
 more manageable.
 
+<p align="center">
+  <img src="images/image.png">
+</p>
+
 
 ## Project overview
 
@@ -220,12 +224,41 @@ docker run -it --rm \
 
 ## Using the application
 
-When the application is running, we can use requests for
+When the application is running, we can start using it.
+
+
+### CLI
+
+We built an interactive CLI application using
+[questionary](https://questionary.readthedocs.io/en/stable/).
+
+To start it, run:
+
+```bash
+pipenv run python cli.py
+```
+
+You can also make it randomly select a question from
+[our ground truth dataset](data/ground-truth-retrieval.csv):
+
+```bash
+pipenv run python cli.py --random
+```
+
+### Using Python requests
+
+When the application is running, we can us
+[requests](https://requests.readthedocs.io/en/latest/) for
 sending questions - use [test.py](test.py) for testing it:
 
 ```bash
 pipenv run python test.py
 ```
+
+It will pick a random question from the ground truth dataset
+and send it to the app.
+
+### CURL
 
 We can also use `curl` for interacting with the API:
 
@@ -293,6 +326,11 @@ The code for the application is in the
 - [`rag.py`](fitness_assistant/rag.py)
 - `db_prep.py`
 - `db.py`
+
+We also have some code in the project root directory:
+
+- test.py
+- cli.py
 
 
 ### Interface
