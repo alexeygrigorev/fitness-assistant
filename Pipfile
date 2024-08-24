@@ -18,6 +18,8 @@ notebook = "==7.1.2"
 ipywidgets = "*"
 jupyter = "*"
 requests = "*"
+pgcli = "*"
+questionary = "*"
 
 [requires]
 python_version = "3.12"
