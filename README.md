@@ -16,6 +16,15 @@ manageable.
   <img src="images/image.png">
 </p>
 
+To see a demo of the project and instructions on how to run it
+on github codespaces, check this video:
+
+<p align="center">
+  <a href="https://www.loom.com/share/698e12f990ef40c4858d8300e4ea3c53">
+    <img src="images/demo.png">
+  </a>
+</p>
+
 ## Project overview
 
 The Fitness Assistant is a RAG application designed to assist
