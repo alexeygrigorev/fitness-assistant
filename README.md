@@ -64,9 +64,9 @@ You can find the data in [`data/data.csv`](data/data.csv).
 
 Since we use OpenAI, you need to provide the API key:
 
-1. Install `direnv`. If you use Ubuntu, run `sudo apt install direnv`.
+1. Install `direnv`. If you use Ubuntu, run `sudo apt install direnv` and then `direnv hook bash >> ~/.bashrc`.
 2. Copy `.envrc_template` into `.envrc` and insert your key there.
-3. It's recommended to create a new project and use a separate key.
+3. For OpenAI, it's recommended to create a new project and use a separate key.
 4. Run `direnv allow` to load the key into your environment.
 
 For dependency management, we use pipenv, so you need to install it:
@@ -83,18 +83,19 @@ pipenv install --dev
 
 ## Running the application
 
-The easiest way to run this application is with Docker Compose:
-
-```bash
-docker-compose up
-```
 
 ### Database configuration
 
-When the application starts for the first time, the database needs
-to be initialized.
+Before the application starts for the first time, the database
+needs to be initialized.
 
-Run the [`db_prep.py`](fitness_assistant/db_prep.py) script:
+First, run `postgres`:
+
+```bash
+docker-compose up postgres
+```
+
+Then run the [`db_prep.py`](fitness_assistant/db_prep.py) script:
 
 ```bash
 pipenv shell
@@ -104,8 +105,6 @@ cd fitness_assistant
 export POSTGRES_HOST=localhost
 python db_prep.py
 ```
-
-Note: Perform this step after running `docker-compose up`.
 
 To check the content of the database, use `pgcli` (already
 installed with pipenv):
@@ -124,6 +123,67 @@ And select from this table:
 
 ```sql
 select * from conversations;
+```
+
+### Running with Docker-Compose
+
+The easiest way to run the application is with `docker-compose`:
+
+```bash
+docker-compose up
+```
+
+### Running locally
+
+If you want to run the application locally,
+start only postres and grafana:
+
+```bash
+docker-compose up postgres grafana
+```
+
+If you previously started all applications with
+`docker-compose up`, you need to stop the `app`:
+
+```bash
+docker-compose stop app
+```
+
+Now run the app on your host machine:
+
+```bash
+pipenv shell
+
+cd fitness_assistant
+
+export POSTGRES_HOST=localhost
+python app.py
+```
+
+### Running with Docker (without compose)
+
+Sometimes you might want to run the application in
+Docker without Docker Compose, e.g., for debugging purposes.
+
+First, prepare the environment by running Docker Compose
+as in the previous section.
+
+Next, build the image:
+
+```bash
+docker build -t fitness-assistant .
+```
+
+And run it:
+
+```bash
+docker run -it --rm \
+    --network="fitness-assistant_default" \
+    --env-file=".env" \
+    -e OPENAI_API_KEY=${OPENAI_API_KEY} \
+    -e DATA_PATH="data/data.csv" \
+    -p 5000:5000 \
+    fitness-assistant
 ```
 
 ### Time configuration
@@ -169,55 +229,6 @@ Note that the time is in UTC.
 
 After that, start the application (and the database) again.
 
-### Running locally
-
-For running the application locally, start Docker Compose but stop the app:
-
-```bash
-docker-compose up postgres grafana
-```
-
-If you previously started all applications with
-`docker-compose up`, you need to stop the `app`:
-
-```bash
-docker-compose stop app
-```
-
-Now run the app on your host machine:
-
-```bash
-pipenv shell
-cd fitness_assistant
-export POSTGRES_HOST=localhost
-python app.py
-```
-
-### Running with Docker (without compose)
-
-Sometimes you might want to run the application in
-Docker without Docker Compose, e.g., for debugging purposes.
-
-First, prepare the environment by running Docker Compose
-as in the previous section.
-
-Next, build the image:
-
-```bash
-docker build -t fitness-assistant .
-```
-
-And run it:
-
-```bash
-docker run -it --rm \
-    --network="fitness-assistant_default" \
-    --env-file=".env" \
-    -e OPENAI_API_KEY=${OPENAI_API_KEY} \
-    -e DATA_PATH="data/data.csv" \
-    -p 5000:5000 \
-    fitness-assistant
-```
 
 ## Using the application
 
@@ -439,7 +450,13 @@ running (it starts automatically when you do `docker-compose up`).
 Then run:
 
 ```bash
+pipenv shell
+
 cd grafana
+
+# make sure the POSTGRES_HOST variable is not overwritten 
+env | grep POSTGRES_HOST
+
 python init.py
 ```
 

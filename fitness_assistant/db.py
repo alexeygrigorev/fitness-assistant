@@ -4,6 +4,7 @@ from psycopg2.extras import DictCursor
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
+RUN_TIMEZONE_CHECK = os.getenv('RUN_TIMEZONE_CHECK', '1') == '1'
 
 TZ_INFO = os.getenv("TZ", "Europe/Berlin")
 tz = ZoneInfo(TZ_INFO)
@@ -193,5 +194,6 @@ def check_timezone():
     finally:
         conn.close()
 
-# Call this function before saving conversations
-check_timezone()
+
+if RUN_TIMEZONE_CHECK:
+    check_timezone()
