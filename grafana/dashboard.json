@@ -113,7 +113,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\r\n  timestamp AS time,\r\n  question,\r\n  answer,\r\n  relevance,\r\n  timestamp\r\nFROM conversations\r\nWHERE timestamp BETWEEN $__timeFrom() AND $__timeTo()\r\nORDER BY timestamp DESC\r\nLIMIT 5\r\n",
+          "rawSql": "SELECT\r\n  timestamp AS time,\r\n  question,\r\n  answer,\r\n  relevance\r\nFROM conversations\r\nWHERE timestamp BETWEEN $__timeFrom() AND $__timeTo()\r\nORDER BY timestamp DESC\r\nLIMIT 5\r\n",
           "refId": "A",
           "sql": {
             "columns": [
