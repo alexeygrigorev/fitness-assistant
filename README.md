@@ -12,6 +12,10 @@ The Fitness Assistant provides a conversational AI that helps
 users choose exercises and find alternatives, making fitness more
 manageable.
 
+This project was implemented for 
+[LLM Zoomcamp](https://github.com/DataTalksClub/llm-zoomcamp) -
+a free course about LLMs and RAG.
+
 <p align="center">
   <img src="images/image.png">
 </p>
@@ -329,17 +333,17 @@ After sending it, you'll receive the acknowledgement:
 
 The code for the application is in the [`fitness_assistant`](fitness_assistant/) folder:
 
-- [`app.py`](fitness_assistant/app.py)
-- [`ingest.py`](fitness_assistant/ingest.py)
-- [`minsearch.py`](fitness_assistant/minsearch.py)
-- [`rag.py`](fitness_assistant/rag.py)
-- `db_prep.py`
-- `db.py`
+- [`app.py`](fitness_assistant/app.py) - the Flask API, the main entrypoint to the application
+- [`rag.py`](fitness_assistant/rag.py) - the main RAG logic for building the retrieving the data and building the prompt
+- [`ingest.py`](fitness_assistant/ingest.py) - loading the data into the knowledge base
+- [`minsearch.py`](fitness_assistant/minsearch.py) - an in-memory search engine
+- [`db.py`](fitness_assistant/db.py) - the logic for logging the requests and responses to postgres
+- [`db_prep.py`](fitness_assistant/db_prep.py) - the script for initializing the database
 
 We also have some code in the project root directory:
 
-- `test.py`
-- `cli.py`
+- [`test.py`](test.py) - select a random question for testing
+- [`cli.py`](cli.py) - interactive CLI for the APP
 
 ### Interface
 
@@ -491,3 +495,12 @@ create an endpoint for asking questions and use web clients
 In our case, we can send questions to `http://localhost:5000/question`.
 
 For more information, visit the [official Flask documentation](https://flask.palletsprojects.com/).
+
+
+## Acknowledgements 
+
+I thank the course participants for all your energy
+and positive feedback as well as the course sponsors for
+making it possible to run this course for free. 
+
+I hope you enjoyed doing the course =)

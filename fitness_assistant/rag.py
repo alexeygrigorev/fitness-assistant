@@ -12,7 +12,15 @@ index = ingest.load_index()
 
 
 def search(query):
-    boost = {}
+    boost = {
+        'exercise_name': 2.11,
+        'type_of_activity': 1.46,
+        'type_of_equipment': 0.65,
+        'body_part': 2.65,
+        'type': 1.31,
+        'muscle_groups_activated': 2.54,
+        'instructions': 0.74
+    }
 
     results = index.search(
         query=query, filter_dict={}, boost_dict=boost, num_results=10
