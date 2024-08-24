@@ -4,8 +4,6 @@
   <img src="images/banner.jpg">
 </p>
 
-## Problem description
-
 Staying consistent with fitness routines is challenging,
 especially for beginners. Gyms can be intimidating, and
 personal trainers aren't always available.
