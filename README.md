@@ -81,7 +81,7 @@ Once installed, you can install the app dependencies:
 pipenv install --dev
 ```
 
-## Running the Application
+## Running the application
 
 The easiest way to run this application is with Docker Compose:
 
@@ -89,7 +89,7 @@ The easiest way to run this application is with Docker Compose:
 docker-compose up
 ```
 
-### Database Configuration
+### Database configuration
 
 When the application starts for the first time, the database needs
 to be initialized.
@@ -97,8 +97,10 @@ to be initialized.
 Run the [`db_prep.py`](fitness_assistant/db_prep.py) script:
 
 ```bash
-cd fitness_assistant
 pipenv shell
+
+cd fitness_assistant
+
 export POSTGRES_HOST=localhost
 python db_prep.py
 ```
@@ -124,7 +126,7 @@ And select from this table:
 select * from conversations;
 ```
 
-### Time and Timezone Configuration
+### Time configuration
 
 When inserting logs into the database, ensure the timestamps are
 correct. Otherwise, they won't be displayed accurately in Grafana.
@@ -239,15 +241,15 @@ You can also make it randomly select a question from
 pipenv run python cli.py --random
 ```
 
-### Using Python Requests
+### Using `requests`
 
 When the application is running, you can use
 [requests](https://requests.readthedocs.io/en/latest/)
 to send questions—use [test.py](test.py) for testing it:
 
-    ```bash
-    pipenv run python test.py
-    ```
+```bash
+pipenv run python test.py
+```
 
 It will pick a random question from the ground truth dataset
 and send it to the app.
