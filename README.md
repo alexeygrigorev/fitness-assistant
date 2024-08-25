@@ -23,11 +23,11 @@ a free course about LLMs and RAG.
 To see a demo of the project and instructions on how to run it
 on github codespaces, check this video:
 
-<p align="center">
-  <a href="https://www.loom.com/share/698e12f990ef40c4858d8300e4ea3c53">
-    <img src="images/demo.png">
-  </a>
-</p>
+
+<a href="https://www.youtube.com/watch?v=RiQcSHzR8_E">
+  <img src="https://markdown-videos-api.jorgenkh.no/youtube/RiQcSHzR8_E">
+</a>
+
 
 ## Project overview
 
