@@ -1,5 +1,7 @@
 # Fitness Assistant
 
+Note: I submitted this project too to see how many points it'd get
+
 <p align="center">
   <img src="images/banner.jpg">
 </p>
