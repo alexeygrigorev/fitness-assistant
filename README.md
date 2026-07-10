@@ -54,7 +54,7 @@ The app runs at http://localhost:5000, Grafana at http://localhost:3000.
 - Docker and Docker Compose
 - OpenAI API key
 - [direnv](https://direnv.net/) for environment variables
-- [pipenv](https://pipenv.pypa.io/) for dependency management
+- [uv](https://docs.astral.sh/uv/) for dependency management
 
 ### Full setup
 
@@ -72,17 +72,15 @@ The app runs at http://localhost:5000, Grafana at http://localhost:3000.
 
 3. Install Python dependencies:
    ```bash
-   pip install pipenv
-   pipenv install --dev
+   uv sync
    ```
 
 4. Initialize the database:
    ```bash
    docker-compose up postgres
-   pipenv shell
    cd fitness_assistant
    export POSTGRES_HOST=localhost
-   python db_prep.py
+   uv run python db_prep.py
    ```
 
 5. Run the app:
@@ -92,9 +90,8 @@ The app runs at http://localhost:5000, Grafana at http://localhost:3000.
 
 6. Initialize the Grafana dashboard:
    ```bash
-   pipenv shell
    cd grafana
-   python init.py
+   uv run python init.py
    ```
 
 ### Running locally
@@ -108,10 +105,9 @@ docker-compose up postgres grafana
 Then run the app on your host machine:
 
 ```bash
-pipenv shell
-cd fitness_assistant
-export POSTGRES_HOST=localhost
-python app.py
+   cd fitness_assistant
+   export POSTGRES_HOST=localhost
+   uv run python app.py
 ```
 
 ### Time configuration
@@ -140,13 +136,13 @@ There is no automated test suite. The interactive CLI is the primary way to
 test the application:
 
 ```bash
-pipenv run python cli.py
+uv run python cli.py
 ```
 
 Or pick a random question from the ground truth dataset:
 
 ```bash
-pipenv run python cli.py --random
+uv run python cli.py --random
 ```
 
 You can also test the API with curl:
@@ -234,23 +230,31 @@ Evaluation data:
 
 ## Architecture
 
-```text
-User
-  |
-  v
-Flask API (app.py)  ----->  CLI (cli.py)
-  |
-  v
-RAG module (rag.py)
-  |
-  +-- ingest.py -> minsearch (in-memory search over 207 exercises)
-  +-- OpenAI LLM (gpt-4o-mini)
-  |
-  v
-Answer + conversation_id
-  |
-  v
-PostgreSQL (db.py)  ----->  Grafana dashboard (localhost:3000)
+```mermaid
+flowchart TD
+    User["User"]
+    CLI["CLI (cli.py)"]
+    API["Flask API (app.py)"]
+    RAG["RAG module (rag.py)"]
+    Search["minsearch<br/>207 exercises, in-memory"]
+    LLM["OpenAI LLM<br/>gpt-4o-mini"]
+    DB[("PostgreSQL")]
+    Grafana["Grafana dashboard<br/>localhost:3000"]
+
+    User --> CLI
+    User --> API
+    CLI --> API
+    API --> RAG
+    RAG --> Search
+    RAG --> LLM
+    RAG --> API
+    API --> DB
+    DB --> Grafana
+
+    style Search fill:#1e3a5f,color:#fff
+    style LLM fill:#10a37f,color:#fff
+    style DB fill:#336791,color:#fff
+    style Grafana fill:#f46800,color:#fff
 ```
 
 ## Monitoring
