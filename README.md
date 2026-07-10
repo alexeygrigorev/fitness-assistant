@@ -1,14 +1,14 @@
 # Fitness Assistant
 
+<p align="center">
+  <img src="images/image.jpg" width="400">
+</p>
+
 A conversational AI that helps users choose exercises and find
 alternatives, making fitness more approachable for beginners who
 find gyms intimidating or can't always access a personal trainer.
 
 Built as a demo project for [LLM Zoomcamp](https://github.com/DataTalksClub/llm-zoomcamp).
-
-<p align="center">
-  <img src="images/banner.jpg" width="400">
-</p>
 
 ## Demo
 
@@ -194,7 +194,7 @@ Improved (with tuned field boosting):
 - Hit rate: 94%
 - MRR: 90%
 
-Best boosting parameters:
+Best boosting parameters for search:
 
 ```python
 boost = {

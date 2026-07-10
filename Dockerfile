@@ -1,16 +1,18 @@
 FROM python:3.12-slim
 
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+
 WORKDIR /app
 
-RUN pip install pipenv
-
+COPY pyproject.toml ./
 COPY data/data.csv data/data.csv
-COPY ["Pipfile", "Pipfile.lock", "./"]
 
-RUN pipenv install --deploy --ignore-pipfile --system
+RUN uv sync --no-dev --no-install-project
 
 COPY fitness_assistant .
 
+RUN uv sync --no-dev
+
 EXPOSE 5000
 
-CMD gunicorn --bind 0.0.0.0:5000 app:app
+CMD ["uv", "run", "gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
