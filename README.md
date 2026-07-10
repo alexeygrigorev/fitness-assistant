@@ -6,11 +6,15 @@ find gyms intimidating or can't always access a personal trainer.
 
 Built as a demo project for [LLM Zoomcamp](https://github.com/DataTalksClub/llm-zoomcamp).
 
+<p align="center">
+  <img src="images/banner.jpg" width="400">
+</p>
+
 ## Demo
 
 <p align="center">
   <a href="https://www.youtube.com/watch?v=RiQcSHzR8_E">
-    <img src="images/image.png" alt="Fitness Assistant demo">
+    <img src="images/demo.jpg" alt="Fitness Assistant demo">
   </a>
 </p>
 
@@ -96,7 +100,7 @@ The app runs at http://localhost:5000, Grafana at http://localhost:3000.
 
 ### Running locally
 
-If you want to run the application locally, start only postgres and grafana:
+If you want to run the app directly on your machine instead of in Docker, start only the Postgres and Grafana containers as dependencies:
 
 ```bash
 docker-compose up postgres grafana
@@ -105,9 +109,9 @@ docker-compose up postgres grafana
 Then run the app on your host machine:
 
 ```bash
-   cd fitness_assistant
-   export POSTGRES_HOST=localhost
-   uv run python app.py
+cd fitness_assistant
+export POSTGRES_HOST=localhost
+uv run python app.py
 ```
 
 ### Time configuration
