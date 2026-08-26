@@ -57,6 +57,42 @@ def create_api_key():
         return None
 
 
+def create_service_account():
+    auth = (GRAFANA_USER, GRAFANA_PASSWORD)
+    headers = {"Content-Type": "application/json"}
+    payload = {
+        "name": "sa-1-programmaticserviceaccountt",
+        "role": "Admin",
+    }
+    response = requests.post(
+        f"{GRAFANA_URL}/api/serviceaccounts", auth=auth, headers=headers, json=payload
+    )
+
+    if response.status_code == 201:  # Updated to check for 201 Created
+        print("Service account created successfully")
+        return response.json()["id"]
+    else:
+        print(f"Failed to create service account: {response.text}")
+        return None
+
+def create_service_account_token(service_account_id):
+    auth = (GRAFANA_USER, GRAFANA_PASSWORD)
+    headers = {"Content-Type": "application/json"}
+    payload = {
+        "name": "ProgrammaticToken",
+    }
+    response = requests.post(
+        f"{GRAFANA_URL}/api/serviceaccounts/{service_account_id}/tokens", auth=auth, headers=headers, json=payload
+    )
+
+    if response.status_code == 200 or response.status_code == 201:
+        print("Service account token created successfully")
+        return response.json()["key"]
+    else:
+        print(f"Failed to create service account token: {response.text}")
+        return None
+
+
 def create_or_update_datasource(api_key):
     headers = {
         "Authorization": f"Bearer {api_key}",
@@ -179,10 +215,20 @@ def create_dashboard(api_key, datasource_uid):
 
 
 def main():
+    # ! NB API keys work only in Grafana up to 11.2.2 (deprecated), not working in 11.3.0
+    # https://grafana.com/docs/grafana/latest/developers/http_api/serviceaccount/   
     api_key = create_api_key()
     if not api_key:
-        print("API key creation failed")
-        return
+        print("API key creation failed. Trying create_service_account")
+        service_account_id = create_service_account()
+        if not service_account_id:
+            print("Service account creation failed")
+            return
+
+        api_key = create_service_account_token(service_account_id)
+        if not api_key:
+            print("Service account token creation failed")
+            return
 
     datasource_uid = create_or_update_datasource(api_key)
     if not datasource_uid:
